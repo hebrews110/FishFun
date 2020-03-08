@@ -103,7 +103,7 @@ window.onload = () => {
         const fishTypes = React.useRef({
             mouth: "on bottom",
             body: "fusiform",
-            tail: "forked"
+            tail: "lunate"
         });
         const forceUpdate = useForceUpdate();
         const [ showCheckIndicator, setShowCheckIndicator ] = React.useState(false);
@@ -113,17 +113,28 @@ window.onload = () => {
             setShowCheckIndicator(false);
             forceUpdate();
         };
+        React.useEffect(() => {
+            Swal.fire({
+                title: 'Instructions',
+                text: 'Build an ideal fish for the open ocean. Click on the dropdown arrows to choose the best parts to build your fish with.',
+                confirmButtonText: 'Start'
+            });
+        }, []);
         let pointsValue = 0;
         Object.keys(fishTypes.current).forEach(key => pointsValue += pointValues[key][fishTypes.current[key]]);
         console.log(pointsValue);
-        let imageSource = null;
+        let imageSource = null, textResult = null;
         const gameDone = showCheckIndicator && (pointsValue >= 8);
-        if(gameDone)
+        if(gameDone) {
             imageSource = "images/happyfish.png";
-        else if(pointsValue >= 5)
+            textResult = "Healthy fish";
+        } else if(pointsValue >= 5) {
             imageSource = "images/sadfish.svg";
-        else
+            textResult = "Sick fish";
+        } else {
             imageSource = "images/deadfish.png";
+            textResult = "Dead fish";
+        }
         return <>
             {!whoLives && <div className="fish" style={{display: gameDone ? 'none' : null }}>
                 <FishImageBox gameDone={gameDone} category="mouth" info={fishTypes.current} handleCategoryChange={handleCategoryChange}/>
@@ -131,8 +142,9 @@ window.onload = () => {
                 <FishImageBox gameDone={gameDone} category="tail" info={fishTypes.current} handleCategoryChange={handleCategoryChange}/>
             </div>}
             {!whoLives && <img key="same-old-fish-image" className={`fish-indicator ${gameDone ? "fish-indicator-grow" : ""}`} style={{display: showCheckIndicator ? null : 'none' }} src={imageSource}/>}
+            {showCheckIndicator && <h1>Result: {textResult}</h1>}
             {(!whoLives && !showCheckIndicator) && <button style={{display: gameDone ? 'none' : null }} className="check-button" onClick={setShowCheckIndicator.bind(this, true)} disabled={showCheckIndicator}>Check me!</button>}
-            {!whoLives && <button style={{display: gameDone ? 'none' : null }} className="check-button" onClick={setWhoLives.bind(this, true)}>Who Lives Here?</button>}
+            {!whoLives && <button style={{display: gameDone ? 'none' : null }} className="check-button" onClick={setWhoLives.bind(this, true)}>Who lives in the open ocean?</button>}
             {whoLives && <h1>Tuna fish</h1>}
             {whoLives && <img className="fish-indicator" src="images/tuna.svg"/>}
             {whoLives && <button style={{display: gameDone ? 'none' : null }} className="check-button" onClick={setWhoLives.bind(this, false)}>Go back</button>}

@@ -80,7 +80,7 @@ html, body, #game-container {
     margin-top: 3rem;
 }
 
-@media screen and (max-height: 500px) {
+@media screen and (max-height: 700px) {
     .fish {
         margin-top: 0;
     }
